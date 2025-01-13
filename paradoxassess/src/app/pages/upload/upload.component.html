@@ -1,0 +1,27 @@
+<div class="upload-container">
+  <h2>Upload File to S3</h2>
+  <div class="upload-status" *ngIf="uploadStatus">{{ uploadStatus }}</div>
+  
+  <input 
+        type="file" 
+         (change)="onFileSelected($event)" 
+         accept=".pdf,.txt"
+         [disabled]="isUploading" />
+  
+  <button (click)="uploadFile()" 
+          [disabled]="!selectedFile || isUploading">
+    {{ isUploading ? 'Uploading...' : 'Upload' }}
+  </button>
+
+  <div class="file-list" *ngIf="files.length">
+    <h3>Uploaded Files</h3>
+    <div class="file-button" *ngFor="let file of files">
+
+        <div class="file-button"
+            (click)="viewFile(file)"
+        >
+          {{ file }}
+        </div>
+    </div>
+  </div>
+</div>
