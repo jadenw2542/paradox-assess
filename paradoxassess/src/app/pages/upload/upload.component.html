@@ -15,13 +15,15 @@
 
   <div class="file-list" *ngIf="files.length">
     <h3>Uploaded Files</h3>
-    <div class="file-button" *ngFor="let file of files">
-
+    <div *ngFor="let file of files">
         <div class="file-button"
             (click)="viewFile(file)"
         >
           {{ file }}
         </div>
+        <button
+        (click)="deleteFile(file)"> Delete 
+        </button>
     </div>
   </div>
 </div>

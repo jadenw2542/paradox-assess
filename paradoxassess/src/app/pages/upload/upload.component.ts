@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { S3Service } from '../../services/s3.service';
-import { Router } from '@angular/router';
-
+import { Router, NavigationExtras } from '@angular/router';
 @Component({
   selector: 'app-upload',
   templateUrl: './upload.component.html',
@@ -71,7 +70,36 @@ export class UploadComponent {
     }
   }
 
-  viewFile(file: string) {
-    this.router.navigate(['/view', file]);
+  async deleteFile(fileName : string): Promise<void> {
+
+    try{
+      this.uploadStatus = await this.s3Service.deleteFile(fileName);
+      await this.loadFiles();
+    }
+    catch(error) {
+      this.uploadStatus = 'Error deleting file:';
+    }
+    finally{
+      
+    }
+    
   }
+
+  viewFile(file: string) {
+    const generateQuizDefault = {
+        fileName: file,
+        selectedQuizType: 'multiple choice',
+        selectedQuestionType: 'scenario',
+        selectedNumOfQuestions: '1'
+    };
+    
+    const navigationExtras: NavigationExtras = {
+        state: {
+            quizOptions: generateQuizDefault
+        }
+    };
+    
+    this.router.navigate(['/view'], navigationExtras);
+}
+  
 }

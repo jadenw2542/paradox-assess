@@ -1,5 +1,41 @@
 <div class="view-container">
-    <button (click)="goBack()">Back</button>
-    <h2>File Details</h2>
-    <p>Filename: {{ filename }}</p>
-  </div>
+  <button (click)="goBack()">Back</button>
+  <h2>File Details</h2>
+  <p>Filename: {{ quizOptions?.fileName }}</p>
+
+  <h4>Quiz Options</h4>
+  <form [formGroup]="profileForm">
+    <mat-form-field>
+      <mat-label>Quiz Type</mat-label>
+      <mat-select formControlName="quizType">
+        @for (option of quizTypeOptions; track option) {
+          <mat-option [value]="option.value">{{option.viewValue}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Question Type</mat-label>
+      <mat-select formControlName="questionType">
+        @for (option of questionTypeOptions; track option) {
+          <mat-option [value]="option.value">{{option.viewValue}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Number Of Questions</mat-label>
+      <mat-select formControlName="numQuestions">
+        @for (option of numQuestionOptions; track option) {
+          <mat-option [value]="option.value">{{option.viewValue}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </form>
+
+  <button mat-button
+    (click)="generateQuiz()" 
+    [disabled]="isGenerating">
+    {{ isGenerating ? 'Generating...' : 'Generate Quiz' }}
+  </button>
+</div>

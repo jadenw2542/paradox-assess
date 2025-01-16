@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, from } from 'rxjs';
-import { S3Client, PutObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { environment } from '../../environments/environment';
 
 
@@ -34,6 +34,21 @@ export class S3Service {
       return response.ETag || 'Upload successful';
     } catch (error) {
       console.error('Error uploading file:', error);
+      throw error;
+    }
+  }
+
+  async deleteFile(fileName: string): Promise<string> {
+    try {
+      const command = new DeleteObjectCommand({
+        Bucket: environment.s3BucketName,
+        Key: fileName,
+      });
+
+      const response = await this.s3Client.send(command);
+      return `${fileName} deleted`;
+    } catch (error) {
+      console.error('Error deleting file:', error);
       throw error;
     }
   }

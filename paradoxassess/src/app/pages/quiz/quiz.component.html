@@ -1,0 +1,105 @@
+<div class="quiz-container">
+    <div class="quiz-header">
+      <h2>Quiz</h2>
+      <div class="quiz-info">
+        <p>Filename: {{ quizOptions?.fileName }}</p>
+        <p>Quiz Type: {{quizOptions?.selectedQuizType}}</p>
+        <p>Question Type: {{quizOptions?.selectedQuestionType}}</p>
+        <p>Number Of Questions: {{quizOptions?.selectedNumOfQuestions}}</p>
+      </div>
+      <button mat-button (click)="changeQuizSettings()" [disabled]="isGeneratingNewQuestions">
+        Change Quiz Settings
+      </button>
+      <button mat-button (click)="generateNewQuiz()" [disabled]="isGeneratingNewQuestions">
+        {{ isGeneratingNewQuestions ? 'Generating...' : 'Generate New Questions ' }}
+      </button>
+    </div>
+  
+    @if (questions.length > 0) {
+      <mat-card class="question-card">
+        <mat-card-header>
+          <mat-card-title>Question {{ currentQuestionIndex + 1 }} of {{ questions.length }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="question-text">{{ currentQuestion.question }}</p>
+  
+          @if (isMultipleChoice()) {
+            <div class="options-container">
+              <mat-radio-group [(ngModel)]="selectedAnswer" [disabled]="isSubmitted">
+                @for (option of currentQuestion.options; track option) {
+                <div>
+                  <mat-radio-button 
+                    [value]="option"
+                    [ngClass]="{
+                      'correct-answer': isSubmitted && isCorrectAnswer(option)
+                    }">
+                    {{ option }}
+                  </mat-radio-button>
+                </div>
+                }
+              </mat-radio-group>
+  
+              @if (isSubmitted) {
+                <div class="explanation-container">
+                  @for (explanation of currentQuestion.explanations | keyvalue; track explanation) {
+                    <p [ngClass]="{
+                      'explanation': true,
+                      'correct-explanation': explanation.key === currentQuestion.correct_answer
+                    }">
+                      <strong>{{ explanation.key }}:</strong> {{ explanation.value }}
+                    </p>
+                  }
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="open-ended-container">
+              <mat-form-field class="full-width">
+                <textarea 
+                  matInput 
+                  [(ngModel)]="userAnswer" 
+                  [disabled]="isSubmitted"
+                  placeholder="Type your answer here"
+                  rows="4">
+                </textarea>
+              </mat-form-field>
+  
+              @if (isSubmitted) {
+                <div class="sample-answer">
+                  <h4>Sample Answer:</h4>
+                  <p class="formatted-text">{{ currentQuestion.sample_answer }}</p>
+                </div>
+              }
+            </div>
+          }
+        </mat-card-content>
+  
+        <mat-card-actions>
+          <button 
+            mat-button 
+            (click)="previousQuestion()" 
+            [disabled]="currentQuestionIndex === 0">
+            Previous
+          </button>
+  
+          @if (!isSubmitted) {
+            <button 
+              mat-raised-button 
+              color="primary" 
+              (click)="submitAnswer()" 
+              [disabled]="!selectedAnswer && !userAnswer">
+              Submit Answer
+            </button>
+          } @else {
+            <button 
+              mat-raised-button 
+              color="primary" 
+              (click)="nextQuestion()" 
+              [disabled]="isLastQuestion">
+              Next Question
+            </button>
+          }
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
