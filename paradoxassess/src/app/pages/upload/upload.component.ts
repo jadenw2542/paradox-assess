@@ -20,9 +20,6 @@ import { Router, NavigationExtras } from '@angular/router';
       margin-top: 10px;
       max-width: 500px;
     }
-    .file-button:hover{
-      background-color: coral;
-    }
   `],
   imports: [CommonModule],
 })
@@ -30,7 +27,7 @@ export class UploadComponent {
   selectedFile: File | null = null;
   isUploading = false;
   uploadStatus = '';
-  files: string[] = [];
+  files: { fileName: string, isInDynamoDB: boolean }[] = [];
 
   constructor(private s3Service: S3Service, private router: Router) {
     this.loadFiles();

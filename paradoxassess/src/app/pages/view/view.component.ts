@@ -95,6 +95,7 @@ export class ViewComponent implements OnInit {
       ).subscribe({
         next: (response: any) => {
           // Parse the nested JSON string in the response
+          console.log(response);
           const parsedBody = JSON.parse(response.body);
           const quizData: QuizResponse = JSON.parse(parsedBody);
 

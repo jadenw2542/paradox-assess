@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^19.0.0",
     "@angular/platform-browser-dynamic": "^19.0.0",
     "@angular/router": "^19.0.0",
+    "@aws-sdk/client-dynamodb": "^3.734.0",
     "@aws-sdk/client-s3": "^3.723.0",
     "aws-sdk": "^2.1692.0",
     "rxjs": "~7.8.0",

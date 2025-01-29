@@ -1,0 +1,91 @@
+{
+    "Comment": "Document Processing Workflow",
+    "StartAt": "StartTextractJob",
+    "States": {
+      "StartTextractJob": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "",
+          "Payload": {
+            "bucket.$": "$.detail.bucket.name",
+            "key.$": "$.detail.object.key"
+          }
+        },
+        "ResultPath": "$.textractJob",
+        "Next": "WaitForTextractComplete"
+      },
+      "WaitForTextractComplete": {
+        "Type": "Wait",
+        "Seconds": 5,
+        "Next": "CheckTextractJobStatus"
+      },
+      "CheckTextractJobStatus": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "",
+          "Payload": {
+            "jobId.$": "$.textractJob.Payload.JobId"
+          }
+        },
+        "Next": "JobComplete?",
+        "ResultPath": "$.textractStatus"
+      },
+      "JobComplete?": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.textractStatus.Payload.jobStatus",
+            "StringEquals": "SUCCEEDED",
+            "Next": "GetTextractResults"
+          },
+          {
+            "Variable": "$.textractStatus.Payload.jobStatus",
+            "StringEquals": "FAILED",
+            "Next": "JobFailed"
+          }
+        ],
+        "Default": "WaitForTextractComplete"
+      },
+      "GetTextractResults": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "",
+          "Payload": {
+            "jobId.$": "$.textractJob.Payload.JobId"
+          }
+        },
+        "Next": "StoreToDynamoDB",
+        "ResultPath": "$.textractResults"
+      },
+      "StoreToDynamoDB": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::dynamodb:putItem",
+        "Parameters": {
+          "TableName": "paradox-db",
+          "Item": {
+            "bucket": {
+              "S.$": "$.detail.bucket.name"
+            },
+            "FileKey": {
+              "S.$": "$.detail.object.key"
+            },
+            "text": {
+              "S.$": "$.textractResults.Payload.text"
+            },
+            "processedDate": {
+              "S.$": "$$.State.EnteredTime"
+            }
+          }
+        },
+        "End": true
+      },
+      "JobFailed": {
+        "Type": "Fail",
+        "Cause": "Textract Job Failed",
+        "Error": "TextractJobFailedException"
+      }
+    }
+  }

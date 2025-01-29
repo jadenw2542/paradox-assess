@@ -13,17 +13,25 @@
     {{ isUploading ? 'Uploading...' : 'Upload' }}
   </button>
 
-  <div class="file-list" *ngIf="files.length">
+  <div class="c" *ngIf="files.length">
     <h3>Uploaded Files</h3>
-    <div *ngFor="let file of files">
-        <div class="file-button"
-            (click)="viewFile(file)"
-        >
-          {{ file }}
-        </div>
-        <button
-        (click)="deleteFile(file)"> Delete 
-        </button>
+    <div *ngFor="let file of files; let i = index">  
+      <div>
+        {{ i + 1 }}. {{ file.fileName }}  
+      </div>
+
+      <div>
+      <button
+        (click)="viewFile(file.fileName)"
+        [disabled]="!file.isInDynamoDB">
+        {{ file.isInDynamoDB ? 'Generate' : 'Textract in Progress' }}
+      </button>
+      </div>
+
+      <button (click)="deleteFile(file.fileName)">
+        Delete
+      </button>
+
     </div>
   </div>
 </div>
