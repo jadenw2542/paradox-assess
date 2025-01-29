@@ -1,37 +1,52 @@
 <div class="upload-container">
-  <h2>Upload File to S3</h2>
-  <div class="upload-status" *ngIf="uploadStatus">{{ uploadStatus }}</div>
-  
-  <input 
-        type="file" 
-         (change)="onFileSelected($event)" 
-         accept=".pdf,.txt"
-         [disabled]="isUploading" />
-  
-  <button (click)="uploadFile()" 
-          [disabled]="!selectedFile || isUploading">
-    {{ isUploading ? 'Uploading...' : 'Upload' }}
-  </button>
+  <mat-card class="upload-card">
+    <mat-card-header>
+      <mat-card-title>Upload File to S3</mat-card-title>
+      <mat-card-subtitle>Upload a file to generate a quiz</mat-card-subtitle>
+    </mat-card-header>
 
-  <div class="c" *ngIf="files.length">
-    <h3>Uploaded Files</h3>
-    <div *ngFor="let file of files; let i = index">  
-      <div>
-        {{ i + 1 }}. {{ file.fileName }}  
+    <mat-card-content>
+      <div class="upload-status" *ngIf="uploadStatus">
+        <mat-chip [ngClass]="{'success-chip': uploadStatus.includes('successfully'), 'error-chip': uploadStatus.includes('Error')}">
+          {{ uploadStatus }}
+        </mat-chip>
       </div>
 
-      <div>
-      <button
-        (click)="viewFile(file.fileName)"
-        [disabled]="!file.isInDynamoDB">
-        {{ file.isInDynamoDB ? 'Generate' : 'Textract in Progress' }}
-      </button>
+      <div class="file-upload-section">
+        <input 
+          type="file" 
+          (change)="onFileSelected($event)" 
+          accept=".pdf,.txt"
+          [disabled]="isUploading"
+          #fileInput
+          hidden
+        />
+        <button mat-raised-button color="primary" (click)="fileInput.click()" [disabled]="isUploading">
+          {{ selectedFile ? selectedFile.name : 'Choose File' }}
+        </button>
+        <button mat-raised-button color="accent" (click)="uploadFile()" [disabled]="!selectedFile || isUploading">
+          {{ isUploading ? 'Uploading...' : 'Upload' }}
+        </button>
       </div>
 
-      <button (click)="deleteFile(file.fileName)">
-        Delete
-      </button>
-
-    </div>
-  </div>
+      <div class="uploaded-files-section" *ngIf="files.length">
+        <h3>Uploaded Files</h3>
+        <mat-list>
+          <mat-list-item *ngFor="let file of files; let i = index">
+            <div class="file-item">
+              <span class="file-name">{{ i + 1 }}. {{ file.fileName }}</span>
+              <div class="file-actions">
+                <button mat-raised-button color="primary" (click)="viewFile(file.fileName)" [disabled]="!file.isInDynamoDB">
+                  {{ file.isInDynamoDB ? 'Generate Quiz' : 'Textract in Progress' }}
+                </button>
+                <button mat-raised-button color="warn" (click)="deleteFile(file.fileName)" [disabled]="!file.isInDynamoDB"> 
+                  Delete
+                </button>
+              </div>
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>

@@ -2,9 +2,20 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { S3Service } from '../../services/s3.service';
 import { Router, NavigationExtras } from '@angular/router';
+
+import {FormGroup, FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatListModule} from '@angular/material/list';
+
 @Component({
   selector: 'app-upload',
   templateUrl: './upload.component.html',
+  styleUrl: './upload.component.css',
   styles: [`
     .upload-container {
     }
@@ -21,7 +32,18 @@ import { Router, NavigationExtras } from '@angular/router';
       max-width: 500px;
     }
   `],
-  imports: [CommonModule],
+imports: [
+    CommonModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatCardModule,
+    MatListModule,
+  ],
 })
 export class UploadComponent {
   selectedFile: File | null = null;

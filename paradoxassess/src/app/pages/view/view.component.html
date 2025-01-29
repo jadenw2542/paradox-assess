@@ -1,41 +1,49 @@
 <div class="view-container">
-  <button (click)="goBack()">Back</button>
-  <h2>File Details</h2>
-  <p>Filename: {{ quizOptions?.fileName }}</p>
+  <mat-card class="view-card">
+    <mat-card-header>
+      <mat-card-title>File Details</mat-card-title>
+      <mat-card-subtitle>Generate a quiz based on the selected file</mat-card-subtitle>
+    </mat-card-header>
 
-  <h4>Quiz Options</h4>
-  <form [formGroup]="profileForm">
-    <mat-form-field>
-      <mat-label>Quiz Type</mat-label>
-      <mat-select formControlName="quizType">
-        @for (option of quizTypeOptions; track option) {
-          <mat-option [value]="option.value">{{option.viewValue}}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+    <mat-card-content>
+      <p class="file-name">Filename: {{ quizOptions?.fileName }}</p>
 
-    <mat-form-field>
-      <mat-label>Question Type</mat-label>
-      <mat-select formControlName="questionType">
-        @for (option of questionTypeOptions; track option) {
-          <mat-option [value]="option.value">{{option.viewValue}}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+      <h4 class="quiz-options-title">Quiz Options</h4>
+      <form [formGroup]="profileForm" class="quiz-form">
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Quiz Type</mat-label>
+          <mat-select formControlName="quizType">
+            @for (option of quizTypeOptions; track option) {
+              <mat-option [value]="option.value">{{option.viewValue}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Number Of Questions</mat-label>
-      <mat-select formControlName="numQuestions">
-        @for (option of numQuestionOptions; track option) {
-          <mat-option [value]="option.value">{{option.viewValue}}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-  </form>
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Question Type</mat-label>
+          <mat-select formControlName="questionType">
+            @for (option of questionTypeOptions; track option) {
+              <mat-option [value]="option.value">{{option.viewValue}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-  <button mat-button
-    (click)="generateQuiz()" 
-    [disabled]="isGenerating">
-    {{ isGenerating ? 'Generating...' : 'Generate Quiz' }}
-  </button>
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Number Of Questions</mat-label>
+          <mat-select formControlName="numQuestions">
+            @for (option of numQuestionOptions; track option) {
+              <mat-option [value]="option.value">{{option.viewValue}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="generateQuiz()" [disabled]="isGenerating">
+        {{ isGenerating ? 'Generating...' : 'Generate Quiz' }}
+      </button>
+      <button mat-stroked-button (click)="goBack()">Back</button>
+    </mat-card-actions>
+  </mat-card>
 </div>

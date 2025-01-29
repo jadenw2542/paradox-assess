@@ -9,6 +9,8 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+
 
 @Component({
   selector: 'app-view',
@@ -21,6 +23,7 @@ import {MatButtonModule} from '@angular/material/button';
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
+    MatCardModule,
   ],
   templateUrl: './view.component.html',
   styleUrl: './view.component.css'
